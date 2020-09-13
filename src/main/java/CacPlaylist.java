@@ -28,12 +28,10 @@ public class CacPlaylist {
     private static YouTube youtubeService;
 
     public static Credential authorize(final NetHttpTransport httpTransport) throws IOException {
-        // Load client secrets.
         InputStream in = CacPlaylist.class.getResourceAsStream(CLIENT_SECRETS);
         GoogleClientSecrets clientSecrets = GoogleClientSecrets
                 .load(JSON_FACTORY, new InputStreamReader(in));
 
-        // Build flow and trigger user authorization request.
         GoogleAuthorizationCodeFlow flow = new GoogleAuthorizationCodeFlow
                 .Builder(httpTransport, JSON_FACTORY, clientSecrets, SCOPES)
                 .build();
@@ -45,6 +43,7 @@ public class CacPlaylist {
     public static YouTube getService() throws GeneralSecurityException, IOException {
         final NetHttpTransport httpTransport = GoogleNetHttpTransport.newTrustedTransport();
         Credential credential = authorize(httpTransport);
+
         return new YouTube.Builder(httpTransport, JSON_FACTORY, credential)
                 .setApplicationName(APPLICATION_NAME)
                 .build();
@@ -58,9 +57,8 @@ public class CacPlaylist {
         String cacUploads = getUploadPlaylistId(cacId);
         List<String> cacVideos = getPlaylistItems(cacUploads);
 
-        // Sublista gerada pela limitação de cota diária
-        int insertedVideos = 784;
-        cacVideos = cacVideos.subList(insertedVideos, cacVideos.size());
+        int insertedVideos = 1166;
+        cacVideos = cacVideos.subList(insertedVideos-1, cacVideos.size());
         
         insertIntoPlaylist(cacVideos, myPlaylist);
     }
